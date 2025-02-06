@@ -1,13 +1,24 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectRoute = createRouteMatcher([
-  "/",
-  
-])
-
+  "/bookings(.*)",
+  "/checkout(.*)",
+  "/favourite(.*)",
+  "/profile(.*)",
+  "/rentals(.*)",
+  "/reviews(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectRoute(req)) (await auth()).redirectToSignIn();
+  if (isProtectRoute(req)) {
+    const user = await auth();
+
+    // Check if the user is authenticated
+    if (!user) {
+      // Handle unauthenticated access (e.g., redirect to login)
+      return new Response('Unauthorized', { status: 401 });
+    }
+  }
 });
 
 export const config = {
