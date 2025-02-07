@@ -6,21 +6,19 @@ const ThemeContext = createContext<{ mode: string; setMode: React.Dispatch<React
 
 
 export function ThemeProvider({children}:{children:ReactNode}){
-  const [mode,setMode] = useState('');
+  const [mode, setMode] = useState(() => {
+    // Retrieve the current mode from localStorage or default to 'light'
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+  });
 
-  const handleThemeChange = ()=>{
-    if(mode === 'dark'){
-      setMode('light');
-      document.documentElement.classList.add("light")
-    }else{
-      setMode('dark');
-      document.documentElement.classList.add("dark")
-    }
-  }
-
-  useEffect(()=>{
-    handleThemeChange()
-  },[mode])
+  useEffect(() => {
+    // Set the document class based on the mode
+    document.documentElement.classList.toggle("dark", mode === 'dark');
+    document.documentElement.classList.toggle("light", mode === 'light');
+    
+    // Store the mode in localStorage
+    localStorage.setItem('theme', mode);
+  }, [mode]);
 
   return (
     <ThemeContext.Provider value={{

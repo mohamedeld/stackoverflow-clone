@@ -1,6 +1,9 @@
 import { SignedIn, UserButton } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
+import Theme from "./Theme"
+import MobileNav from "./MobileNav"
+import GlobalSearch from "../search/GlobalSearch"
 
 const Navbar = () => {
   return (
@@ -10,8 +13,10 @@ const Navbar = () => {
         <p className="h2-bold font-space text-dark-100  dark:text-light-900 max-sm:hidden">Dev <span className="text-primary-500">Overflow</span></p>
       </Link>
       {/* Global search */}
+      <GlobalSearch placeholder="Search globally..."/>
       <div className="flex-between gap-5">
         {/* theme */}
+        <Theme/>
         <SignedIn>
           <UserButton afterSwitchSessionUrl="/" appearance={{
             elements:{
@@ -22,6 +27,7 @@ const Navbar = () => {
             }
           }}/>
         </SignedIn>
+        <MobileNav />
       </div>
     </nav>
   )

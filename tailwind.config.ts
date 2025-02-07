@@ -93,8 +93,8 @@ export default {
   			'dark-200': '2px 0px 20px 0px rgba(39, 36, 36, 0.04)'
   		},
   		backgroundImage: {
-  			'auth-dark': 'url('/assets/images/auth-dark.png')',
-  			'auth-light': 'url('/assets/images/auth-light.png')'
+  			'auth-dark': 'url("/assets/images/auth-dark.png")',
+  			'auth-light': 'url("/assets/images/auth-light.png")'
   		},
   		screens: {
   			xs: '420px'
