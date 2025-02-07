@@ -1,4 +1,5 @@
 import LeftSidebar from "@/components/LeftSidebar"
+import RightSidebar from "@/components/RightSidebar"
 import Navbar from "@/components/shared/navbar/Navbar"
 import { ReactNode } from "react"
 
@@ -16,6 +17,7 @@ const RootLayout = ({children}:{children:ReactNode}) => {
           </div>
         </section>
         {/* right sidebar */}
+        <RightSidebar/>
       </div>
       {/* toaster */}
     </main>

@@ -13,7 +13,7 @@ const Navbar = () => {
         <p className="h2-bold font-space text-dark-100  dark:text-light-900 max-sm:hidden">Dev <span className="text-primary-500">Overflow</span></p>
       </Link>
       {/* Global search */}
-      <GlobalSearch placeholder="Search globally..."/>
+      <GlobalSearch keyData="query" placeholder="Search globally..."/>
       <div className="flex-between gap-5">
         {/* theme */}
         <Theme/>

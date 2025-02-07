@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-const GlobalSearch = ({placeholder}:{placeholder:string}) => {
+const GlobalSearch = ({placeholder,keyData}:{placeholder:string,keyData:string}) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -12,9 +12,9 @@ const GlobalSearch = ({placeholder}:{placeholder:string}) => {
     const term = event.target.value;
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set('query', term);
+      params.set(keyData, term);
     } else {
-      params.delete('query');
+      params.delete(keyData);
     }
     replace(`${pathname}?${params.toString()}`);
   }
