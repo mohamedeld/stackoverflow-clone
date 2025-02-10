@@ -18,6 +18,10 @@ import { useRef, useState, useTransition } from "react";
 import { Editor } from '@tinymce/tinymce-react';
 import { Badge } from "../ui/badge";
 import Image from "next/image";
+import { createQuestion } from "@/lib/actions/question.action";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+
 
 interface IProps{
   type:'add' | 'edit';
@@ -27,7 +31,8 @@ const QuestionForm = ({type}:IProps) => {
   const editorRef = useRef(null);
   const [tagInput, setTagInput] = useState('');
   const [isPending,startTransition] = useTransition();
-
+  const {toast} = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof addQuestionSchema>>({
     mode: 'onChange',
     defaultValues: {
@@ -38,7 +43,22 @@ const QuestionForm = ({type}:IProps) => {
     resolver: zodResolver(addQuestionSchema)
   })
   const onSubmit: SubmitHandler<z.infer<typeof addQuestionSchema>> = (values) => {
-
+    startTransition(async()=>{
+      const res = await createQuestion();
+      if(!res?.success){
+        toast({
+          variant:"destructive",
+          description:res?.message
+        })
+        return;
+      }else{
+        toast({
+          title:"Success",
+          description:res?.message
+        })
+        // router.push("/questions")
+      }
+    })
   }
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
     if (e.key === "Enter") {
@@ -127,6 +147,9 @@ const QuestionForm = ({type}:IProps) => {
                       'removeformat | help',
                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                   }}
+                  onEditorChange={(content) => {
+                    form.setValue('explanation', content); // Set the editor content to form
+                  }}
                 />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
@@ -183,4 +206,4 @@ const QuestionForm = ({type}:IProps) => {
   )
 }
 
-export default QuestionForm 
+export default QuestionForm;
