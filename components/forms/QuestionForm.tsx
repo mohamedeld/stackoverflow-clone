@@ -20,19 +20,22 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 interface IProps{
   type:'add' | 'edit';
+  clerkId:string;
 }
 
-const QuestionForm = ({type}:IProps) => {
+const QuestionForm = ({type,clerkId}:IProps) => {
+  
   const editorRef = useRef(null);
   const [tagInput, setTagInput] = useState('');
   const [isPending,startTransition] = useTransition();
   const {toast} = useToast();
   const router = useRouter();
+  const pathname = usePathname();
   const form = useForm<z.infer<typeof addQuestionSchema>>({
     mode: 'onChange',
     defaultValues: {
@@ -43,22 +46,36 @@ const QuestionForm = ({type}:IProps) => {
     resolver: zodResolver(addQuestionSchema)
   })
   const onSubmit: SubmitHandler<z.infer<typeof addQuestionSchema>> = (values) => {
-    startTransition(async()=>{
-      const res = await createQuestion();
-      if(!res?.success){
-        toast({
-          variant:"destructive",
-          description:res?.message
-        })
-        return;
-      }else{
-        toast({
-          title:"Success",
-          description:res?.message
-        })
-        // router.push("/questions")
+    try{
+      const data = {
+        title:values?.title,
+        explanation:values?.explanation,
+        tags:values?.tags,
+        author:JSON.parse(clerkId),
+        path:"/"
       }
-    })
+      startTransition(async()=>{
+        const res = await createQuestion(data);
+        if(!res?.success){
+          toast({
+            variant:"destructive",
+            description:res?.message
+          })
+          return;
+        }else{
+          toast({
+            title:"Success",
+            description:res?.message
+          })
+          router.push("/")
+        }
+      })
+    }catch(error){
+      toast({
+        variant:"destructive",
+            description:error instanceof Error ? error?.message : "Something went wrong"
+      })
+    }
   }
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
     if (e.key === "Enter") {

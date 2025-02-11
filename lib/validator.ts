@@ -8,4 +8,7 @@ export const addQuestionSchema = z.object({
 })
 
 
-export type AddQuestionType = z.infer<typeof addQuestionSchema>
+export type AddQuestionType = z.infer<typeof addQuestionSchema> & {
+  author:string;
+  path:string;
+}
