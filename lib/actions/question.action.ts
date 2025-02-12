@@ -4,6 +4,7 @@ import Question from "@/models/question.model";
 import { connnectToDB } from "../database";
 import { AddQuestionType } from "../validator";
 import Tag from "@/models/tag.model";
+import { GetQuestionsParams } from "@/types";
 
 
 export const createQuestion =async(data:AddQuestionType)=>{
@@ -31,6 +32,23 @@ export const createQuestion =async(data:AddQuestionType)=>{
     return {
       success:true,
       message:'Question created successfully'
+    }
+  }catch(error){
+    return {
+      success:false,
+      message: error instanceof Error ? error?.message : "Something went wrong"
+    }
+  }
+}
+
+
+export async function getAllQuestions(params:GetQuestionsParams){
+  try{
+    await connnectToDB();
+    const questions = await Question.find({}).populate({path:'tags',model:'Tag'}).populate({path:'author',model:'User'});
+    return {
+      success:true,
+      questions
     }
   }catch(error){
     return {

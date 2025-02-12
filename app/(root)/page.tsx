@@ -5,78 +5,26 @@ import NoResult from "@/components/shared/NoResult"
 import GlobalSearch from "@/components/shared/search/GlobalSearch"
 import { Button } from "@/components/ui/button"
 import { HomePageFilters } from "@/constants/filter"
+import { getAllQuestions } from "@/lib/actions/question.action"
 import Link from "next/link"
 
-const questions = [
-  {
-    _id:'1',
-    title:'the first question i ask',
-    tags:[
-      {_id:'1',name:"first"},
-      {_id:'2',name:"second"},
-    ],
-    author:{
-      _id:'1',
-      name:"mohamed",
-      picture:"asdfasdfasdf"
-    },
-    upvotes:10,
-    views:100,
-    answers:'2',
-    createdAt:new Date('2021-01-20T12:00:00.000Z')
-  },{
-    _id:'2',
-    title:'the first question i ask',
-    tags:[
-      {_id:'1',name:"first"},
-      {_id:'2',name:"second"},
-    ],
-    author:{
-      _id:'1',
-      name:"mohamed",
-      picture:"asdfasdfasdf"
-    },
-    upvotes:10,
-    views:100,
-    answers:'2',
-    createdAt:new Date('2021-01-20T12:00:00.000Z')
-  },
-  {
-    _id:'3',
-    title:'the first question i ask',
-    tags:[
-      {_id:'1',name:"first"},
-      {_id:'2',name:"second"},
-    ],
-    author:{
-      _id:'1',
-      name:"mohamed",
-      picture:"asdfasdfasdf"
-    },
-    upvotes:10,
-    views:100,
-    answers:'2',
-    createdAt:new Date('2021-01-20T12:00:00.000Z')
-  },{
-    _id:'4',
-    title:'the first question i ask',
-    tags:[
-      {_id:'1',name:"first"},
-      {_id:'2',name:"second"},
-    ],
-    author:{
-      _id:'1',
-      name:"mohamed",
-      picture:"asdfasdfasdf"
-    },
-    upvotes:10,
-    views:100,
-    answers:'2',
-    createdAt:new Date('2021-01-20T12:00:00.000Z')
-  }
-]
 
-const HomePage = () => {
+
+interface IProps{
+  searchParams:Promise<{
+    page?:string;
+    pageSize?:string;
+    searchQuery?:string;
+    filter?:string;
+  }>
+}
+const HomePage = async ({searchParams}:IProps) => {
+  const {page,pageSize,searchQuery,filter} = await searchParams;
+  const currentPage = Number(page) || 1;
+  const limit = Number(pageSize) || 10;
+  const search = searchQuery || "";
+  const filters = filter || "newest";
+  const res = await getAllQuestions({page:currentPage,pageSize:limit,searchQuery:search,filter:filters});
   return (
     <>
       <div className="flex items-center w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -95,8 +43,8 @@ const HomePage = () => {
       <HomeFilter/>
       <div className="mt-10 flex w-full flex-col gap-6">
         {/* question */}
-        {questions?.length > 0 ? (
-          questions?.map(question=>(
+        {res?.questions?.length ?? 0 > 0 ? (
+          res?.questions?.map(question=>(
             <QuestionCard key={question?._id} _id={question?._id} 
               title={question?.title}
               createdAt={question?.createdAt}

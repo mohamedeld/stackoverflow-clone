@@ -49,3 +49,11 @@ SILVER: number;
 BRONZE: number;
 }
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
+
+
+export interface GetQuestionsParams{
+  page?:number;
+  pageSize?:number;
+  searchQuery?:string;
+  filter?:string;
+}
