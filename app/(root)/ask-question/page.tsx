@@ -9,9 +9,9 @@ const AskQuestionPage = async () => {
     redirect("/")
   }
   const res = await getOneUser(userId);
-  if(!res?.success){
-    redirect("/")
-  }
+  // if(!res?.success){
+  //   redirect("/")
+  // }
   return (
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a question</h1>
