@@ -99,7 +99,7 @@ export async function deleteUser(data:DeleteUserParams){
       author:deletedUser?._id
     }).distinct('_id');
     await Question.deleteMany({author:deletedUser?._id});
-
+    console.log(userQuestionsIds)
     // delete answers
     return {
       success:true,

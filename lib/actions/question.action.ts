@@ -44,6 +44,7 @@ export const createQuestion =async(data:AddQuestionType)=>{
 
 export async function getAllQuestions(params:GetQuestionsParams){
   try{
+    console.log("first",params)
     await connnectToDB();
     const questions = await Question.find({}).populate({path:'tags',model:'Tag'}).populate({path:'author',model:'User'});
     return {

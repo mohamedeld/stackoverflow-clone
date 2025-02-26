@@ -1,3 +1,5 @@
+/**/
+
 'use client';
 import {
   Form,
@@ -20,7 +22,7 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { useToast } from "@/hooks/use-toast";
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 
 
 interface IProps{
@@ -30,12 +32,11 @@ interface IProps{
 
 const QuestionForm = ({type,clerkId}:IProps) => {
   
-  const editorRef = useRef(null);
+  const editorRef = useRef<Editor | null>(null);
   const [tagInput, setTagInput] = useState('');
   const [isPending,startTransition] = useTransition();
   const {toast} = useToast();
   const router = useRouter();
-  const pathname = usePathname();
   const form = useForm<z.infer<typeof addQuestionSchema>>({
     mode: 'onChange',
     defaultValues: {
@@ -77,7 +78,7 @@ const QuestionForm = ({type,clerkId}:IProps) => {
       })
     }
   }
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: any) => {
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: { value: string[]; onChange: (val: string[]) => void }) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const value = tagInput.trim();
@@ -116,7 +117,7 @@ const QuestionForm = ({type,clerkId}:IProps) => {
     }
   };
 
-  const removeTag = (tag: string, field: any) => {
+  const removeTag = (tag: string, field: { value: string[] }) => {
     const newTags = field.value.filter((t: string) => t !== tag);
     form.setValue('tags', newTags);
   };
@@ -142,7 +143,7 @@ const QuestionForm = ({type,clerkId}:IProps) => {
         <FormField
           control={form.control}
           name="explanation"
-          render={({ field }) => (
+          render={() => (
             <FormItem className="flex flex-col w-full gap-3">
               <FormLabel className="paragraph-semibold text-dark400_light900">Detailed explanation of your problem<span className="text-primary-500">*</span></FormLabel>
               <FormControl className="mt-3.5">
@@ -190,7 +191,7 @@ const QuestionForm = ({type,clerkId}:IProps) => {
                   {
                     field?.value?.length > 0 && (
                       <div className="flex-start mt-2.5 gap-2.5">
-                        {Array.isArray(field?.value) && field?.value?.map((tag: any) => (
+                        {Array.isArray(field?.value) && field?.value?.map((tag: string) => (
                           <Badge key={tag}>
                             {tag}
                             <Image
