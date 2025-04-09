@@ -2,7 +2,7 @@
 
 import User from "@/models/user.model";
 import { connnectToDB } from "../database";
-import { CreateUserParams, DeleteUserParams, UpdateUserParams } from "@/types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, UpdateUserParams } from "@/types";
 import { revalidatePath } from "next/cache";
 import Question from "@/models/question.model";
 
@@ -106,6 +106,22 @@ export async function deleteUser(data:DeleteUserParams){
       deletedUser
     }
   }catch(error){
+    return {
+      success:false,
+      message: error instanceof Error ? error?.message : "Something went wrong"
+    }
+  }
+}
+
+export const getAllUsers = async (params?:GetAllUsersParams)=>{
+    try{
+        const {page = 1,pageSize=10,filter,searchQuery} = params;
+        const users = await User.find({}).sort({createdAt:-1});
+        return {
+            success:true,
+            users
+        }
+    }catch(error){
     return {
       success:false,
       message: error instanceof Error ? error?.message : "Something went wrong"
