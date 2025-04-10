@@ -53,7 +53,7 @@ const AuthLogin = () => {
         }
       }
   return (
-    <div className="max-w-3xl border rounded-[8px] shadow">
+    <div className="max-sm:mx-4 w-full md:w-[25rem] p-4 border rounded-[8px] shadow">
          <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField

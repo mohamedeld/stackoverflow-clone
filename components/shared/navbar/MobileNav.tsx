@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { sidebarLinks } from "@/constants";
-import { SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -57,7 +56,7 @@ const MobileNav = () => {
            
           </SheetDescription>
         </SheetHeader>
-        <SignedOut>
+        <>
           <div className="flex flex-col gap-3">
             <SheetClose asChild>
               <Link href="/sign-in">
@@ -74,7 +73,7 @@ const MobileNav = () => {
               </Link>
             </SheetClose>
           </div>
-        </SignedOut>
+        </>
       </SheetContent>
     </Sheet>
 
