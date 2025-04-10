@@ -1,6 +1,5 @@
 "use client"
  
-import { signIn } from "@/auth"
 import { useToast } from "@/hooks/use-toast"
 import { loginSchema } from "@/lib/validator"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signIn } from "next-auth/react"
 
 const AuthLogin = () => {
     const {toast} = useToast();
@@ -37,13 +37,13 @@ const AuthLogin = () => {
                 password:values?.password,
                 redirect:false
             })
-            if(result?.ok){
-                router.replace('/')
+            if(result?.error){
+              toast({
+                  variant:"destructive",
+                  description:result?.error || "Something went wrong"
+              })
             }else{
-                toast({
-                    variant:"destructive",
-                    description:result?.error || "Something went wrong"
-                })
+              router.replace('/')
             }
         }catch(error){
             toast({
@@ -52,6 +52,7 @@ const AuthLogin = () => {
             })
         }
       }
+      const {isSubmitting,errors} = form.formState;
   return (
     <div className="max-sm:mx-4 w-full md:w-[25rem] p-4 border rounded-[8px] shadow">
          <Form {...form}>
@@ -76,7 +77,7 @@ const AuthLogin = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input placeholder="Email" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,13 +90,15 @@ const AuthLogin = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Password" {...field} />
+                <Input placeholder="Password" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Submit</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting' : 'Submit'}
+        </Button>
       </form>
     </Form>
     </div>

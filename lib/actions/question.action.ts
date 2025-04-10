@@ -26,7 +26,7 @@ export const createQuestion =async(data:AddQuestionType)=>{
       },{upsert:true,new:true})
       tagDocuments.push(existingTag?._id);
     }
-    await Question.findByIdAndDelete(question?._id,{
+    await Question.findByIdAndUpdate(question?._id,{
       $push:{tags:{$each:tagDocuments}}
     })
     return {
@@ -44,7 +44,6 @@ export const createQuestion =async(data:AddQuestionType)=>{
 
 export async function getAllQuestions(params:GetQuestionsParams){
   try{
-    console.log("first",params)
     await connnectToDB();
     const questions = await Question.find({}).populate({path:'tags',model:'Tag'}).populate({path:'author',model:'User'});
     return {

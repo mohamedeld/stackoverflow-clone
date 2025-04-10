@@ -2,12 +2,12 @@ import {Schema,models,model,Document} from "mongoose"
 
 
 export interface IUser extends Document{
-  name:string;
+  name?:string;
   username:string;
   email:string;
   password?:string;
   bio?:string;
-  picture:string;
+  picture?:string;
   location?:string;
   portfolioWebsite?:string;
   reputation?:number;
@@ -16,12 +16,12 @@ export interface IUser extends Document{
 }
 
 const userSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String,default:"" },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String }, // Optional for OAuth users
   bio: { type: String, default: "" },
-  picture: { type: String, required: true },
+  picture: { type: String,default:"" },
   location: { type: String },
   portfolioWebsite: { type: String },
   reputation: { type: Number, default: 0 },

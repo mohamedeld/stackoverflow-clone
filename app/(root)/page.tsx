@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import QuestionCard from "@/components/cards/QuestionCard"
 import HomeFilter from "@/components/HomeFilter"
 import Filter from "@/components/shared/Filter"

@@ -16,7 +16,7 @@ export async function getOneUser(userId:string){
         error:"user is not found"
       }
     }
-    const user = await User.findOne({clerkId:userId});
+    const user = await User.findById(userId);
     if(!user){
       return{
         success:false,

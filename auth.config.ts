@@ -2,6 +2,23 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import User from "./models/user.model";
+import { connnectToDB } from "./lib/database";
+
+declare module "next-auth"{
+  interface Session{
+    user:{
+      _id:string;
+      name:string;
+      username:string;
+      email:string;
+      picture:string;
+      location:string;
+      reputation:number;
+      saved:string[];
+    }
+  }
+}
+
 
 export const authConfig = {
   providers: [
@@ -18,10 +35,11 @@ export const authConfig = {
         }
 
         try {
+          await connnectToDB();
           const user = await User.findOne({ email: credentials.email });
           
           if (!user) {
-            const hashPassword = await bcrypt.hash(credentials.password, 10);
+            const hashPassword = await bcrypt.hash(credentials?.password as string, 10);
             const newUser = await User.create({
               username: credentials.username,
               email: credentials.email,
@@ -30,11 +48,10 @@ export const authConfig = {
             return newUser;
           }
 
-          const isMatch = await bcrypt.compare(credentials.password, user.password);
+          const isMatch = await bcrypt.compare(credentials?.password as string, user.password);
           if (!isMatch) {
             return null;
           }
-
           return user;
         } catch (error) {
           console.error('Auth error:', error);
