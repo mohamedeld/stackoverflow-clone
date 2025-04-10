@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/context/ThemeProvide";
+import AuthProvider from "@/context/AuthProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,13 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        elements:{
-          formButtonPrimary:'primary-gradient',
-          footerActionLink: 'primary-text-gradient hover:text-primary-500'
-        }
-      }}
+    <AuthProvider
     >
     <html lang="en">
       <body
@@ -44,6 +38,6 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-    </ClerkProvider>
+    </AuthProvider>
   );
 }

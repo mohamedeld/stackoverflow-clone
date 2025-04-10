@@ -12,3 +12,9 @@ export type AddQuestionType = z.infer<typeof addQuestionSchema> & {
   author:string;
   path:string;
 }
+
+export const loginSchema = z.object({
+    username:z.string({message:"username is required"}),
+    email:z.string({message:"email is required"}).email({message:"email is required"}),
+    password:z.string({message:"password is required"}).min(3,{message:"password should be at least 6 characters"})
+  })

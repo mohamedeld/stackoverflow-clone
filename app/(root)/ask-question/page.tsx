@@ -1,11 +1,11 @@
+import { auth } from "@/auth";
 import QuestionForm from "@/components/forms/QuestionForm"
 import { getOneUser } from "@/lib/actions/user.action";
-import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation";
 
 const AskQuestionPage = async () => {
-  const {userId} = await auth();
-  if(!userId){
+  const session = await auth();
+  if(!session){
     redirect("/")
   }
   const res = await getOneUser(userId);
