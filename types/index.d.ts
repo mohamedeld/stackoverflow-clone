@@ -217,3 +217,19 @@ export interface GetUserStatsParams {
 export interface DeleteUserParams {
   clerkId: string;
 }
+
+export interface UserType {
+  _id: string;
+  username: string;
+  email: string;
+  password: string;
+  picture: string;
+  name: string;
+  bio: string;
+  reputation: number;
+  saved: string[]; // assuming saved is an array of question IDs or similar
+  createdAt: Date;
+  updatedAt: Date;
+  joinedAt: Date;
+  __v: number;
+}

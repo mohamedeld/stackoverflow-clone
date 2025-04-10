@@ -117,6 +117,7 @@ export const getAllUsers = async (params?:GetAllUsersParams)=>{
     try{
         const {page = 1,pageSize=10,filter,searchQuery} = params;
         const users = await User.find({}).sort({createdAt:-1});
+        console.log("users ",users)
         return {
             success:true,
             users
