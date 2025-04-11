@@ -11,10 +11,19 @@ import { useRef } from "react";
 import { useTheme } from "@/context/ThemeProvide";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
-const AnswerForm = () => {
+interface IProps{
+    questionId:string;
+}
+
+const AnswerForm = ({questionId}:IProps) => {
+    const {data:session} = useSession();
     const {mode} = useTheme();
     const {toast} = useToast();
+    const pathname = usePathname();
       const editorRef = useRef<Editor | null>(null);
     
     const form = useForm<z.infer<typeof answerSchema>>({
@@ -23,9 +32,37 @@ const AnswerForm = () => {
         },
         resolver:zodResolver(answerSchema)
     })
-    const onSubmit = (values:z.infer<typeof answerSchema>) => {
+    const onSubmit =async (values:z.infer<typeof answerSchema>) => {
+        if(!session?.user?._id){
+            toast({
+                variant:'destructive',
+                description:'Please login first'
+            })
+            return;
+        }
         try{
-            console.log(values);
+            const res = await createAnswer({
+                question:questionId,
+                author:session?.user?._id,
+                content:values?.answer,
+                path:pathname
+            })
+            if(!res?.success){
+                toast({
+                    variant:'destructive',
+                    description:res?.message
+                })
+                return;
+        }
+            toast({
+                title:'Success',
+                description:'Answer added Successfully'
+            })
+            form.reset();
+            if(editorRef?.current){
+                const editor = editorRef?.current as any;
+                editor?.setContent('')
+            }
         }catch(error){
             toast({
                 variant:"destructive",

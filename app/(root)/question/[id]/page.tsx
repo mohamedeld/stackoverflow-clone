@@ -1,7 +1,10 @@
+import { auth } from "@/auth";
+import AllAnswers from "@/components/answers/AllAnswers";
 import AnswerForm from "@/components/forms/AnswerForm";
 import ParseHTML from "@/components/ParseHTML";
 import Metric from "@/components/shared/Metric";
 import RenderTag from "@/components/shared/RenderTag";
+import Votes from "@/components/Votes";
 import { getQuestion } from "@/lib/actions/question.action";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import Image from "next/image";
@@ -14,6 +17,7 @@ interface IProps{
     }>
 }
 const QuestionDetailPage = async ({params}:IProps) => {
+    const session = await auth();
     const {id} = await params;
     const res = await getQuestion({questionId:id})
     if(!res?.question){
@@ -37,7 +41,7 @@ const QuestionDetailPage = async ({params}:IProps) => {
                 </div>
                 <div className="flex justify-end text-white">
                     {/* voting */}
-                    voting
+                    <Votes/>
                 </div>
             </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
@@ -78,7 +82,8 @@ const QuestionDetailPage = async ({params}:IProps) => {
                 />
             ))}
         </div>
-        <AnswerForm/>
+        <AllAnswers questionId={res?.question?._id} userId={session?.user?._id || ''} totalAnswers={res?.question?.answers?.length}/>
+        <AnswerForm questionId={res?.question?._id} />
     </>
   )
 }
