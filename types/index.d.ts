@@ -233,3 +233,14 @@ export interface UserType {
   joinedAt: Date;
   __v: number;
 }
+
+interface ITag {
+  createdAt: Date;
+  createdOn: Date;
+  followers: string[]; // Replace 'any' with a specific type if you have a follower structure
+  name: string;
+  questions: string[]; // Replace 'any' with a specific type if you have a question structure
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}

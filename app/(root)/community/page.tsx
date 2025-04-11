@@ -8,8 +8,6 @@ import Link from "next/link"
 
 const CommunityPage = async () => {
     const res = await getAllUsers({});
-    console.log(res)
-    console.log(res?.users ? "welcome " : 'not welcome')
     return (
         <>
             <h1 className="h1-bold text-dark100_light900">All Users</h1>

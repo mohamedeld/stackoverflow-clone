@@ -5,17 +5,17 @@ import { ThemeProvider } from "@/context/ThemeProvide";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight:['100','200','300','400','500','600','700','800']
-});
+// const inter = Inter({
+//   variable: "--font-inter",
+//   subsets: ["latin"],
+//   weight:['100','200','300','400','500','600','700','800']
+// });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space",
-  subsets: ["latin"],
-  weight:['300','400','500','600','700']
-});
+// const spaceGrotesk = Space_Grotesk({
+//   variable: "--font-space",
+//   subsets: ["latin"],
+//   weight:['300','400','500','600','700']
+// });
 
 export const metadata: Metadata = {
   title: "Dev flow App",
@@ -32,7 +32,7 @@ export default function RootLayout({
     >
     <html lang="en">
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+        className={` antialiased`}
       >
         <ThemeProvider>
           {children}

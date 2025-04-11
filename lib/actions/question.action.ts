@@ -4,7 +4,7 @@ import Question from "@/models/question.model";
 import { connnectToDB } from "../database";
 import { AddQuestionType } from "../validator";
 import Tag from "@/models/tag.model";
-import { GetQuestionsParams } from "@/types";
+import { GetQuestionByIdParams, GetQuestionsParams } from "@/types";
 
 
 export const createQuestion =async(data:AddQuestionType)=>{
@@ -49,6 +49,24 @@ export async function getAllQuestions(params:GetQuestionsParams){
     return {
       success:true,
       questions
+    }
+  }catch(error){
+    return {
+      success:false,
+      message: error instanceof Error ? error?.message : "Something went wrong"
+    }
+  }
+}
+
+
+export async function getQuestion(params:GetQuestionByIdParams){
+  try{
+    await connnectToDB();
+    const {questionId} = params;
+    const question = await Question.findById(questionId).populate({path:'tags',model:'Tag',select:'_id name'}).populate({path:'author',model:'User',select:'_id username name picture'});
+    return {
+      success:true,
+      question
     }
   }catch(error){
     return {

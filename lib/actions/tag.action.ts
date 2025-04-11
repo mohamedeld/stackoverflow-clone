@@ -1,8 +1,9 @@
 'use server';
 
-import { GetTopInteractedTagsParams } from "@/types";
+import { GetAllTagsParams, GetTopInteractedTagsParams } from "@/types";
 import { connnectToDB } from "../database";
 import User from "@/models/user.model";
+import Tag from "@/models/tag.model";
 
 export async function getTopInteractedTags(params:GetTopInteractedTagsParams){
     try{
@@ -28,6 +29,27 @@ export async function getTopInteractedTags(params:GetTopInteractedTagsParams){
                 _id:'tag3',
                 name:'tag3'
             }]
+        }
+    }catch(error){
+        return {
+            success:false,
+            message: error instanceof Error ? error?.message : "Something went wrong"
+          }
+    }
+}
+
+
+export async function getAllTags(params:GetAllTagsParams){
+    try{
+        await connnectToDB();
+
+        const {page=1,limit = 10,filter,searchQuery} = params;
+        const tags = await Tag.find();
+        // future interaction
+
+        return {
+            success:true,
+            tags
         }
     }catch(error){
         return {
