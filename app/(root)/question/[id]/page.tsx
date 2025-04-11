@@ -1,5 +1,7 @@
+import AnswerForm from "@/components/forms/AnswerForm";
 import ParseHTML from "@/components/ParseHTML";
 import Metric from "@/components/shared/Metric";
+import RenderTag from "@/components/shared/RenderTag";
 import { getQuestion } from "@/lib/actions/question.action";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import Image from "next/image";
@@ -66,6 +68,17 @@ const QuestionDetailPage = async ({params}:IProps) => {
                     />
         </div>
         <ParseHTML explanation={res?.question?.explanation}/>
+        <div className="mt-8 flex flex-wrap gap-2">
+            {res?.question?.tags?.map((tag:{_id:string,name:string})=>(
+                <RenderTag
+                    key={tag?._id}
+                    id={tag?._id}
+                    name={tag?.name}
+                    showCount={false}
+                />
+            ))}
+        </div>
+        <AnswerForm/>
     </>
   )
 }

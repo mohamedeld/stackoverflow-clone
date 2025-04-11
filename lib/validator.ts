@@ -18,3 +18,7 @@ export const loginSchema = z.object({
     email:z.string({message:"email is required"}).email({message:"email is required"}),
     password:z.string({message:"password is required"}).min(3,{message:"password should be at least 6 characters"})
   })
+
+  export const answerSchema = z.object({
+    answer:z.string({message:"Answer is required"}).min(100,{message:"Answer should be at least 100 characters"})
+  })

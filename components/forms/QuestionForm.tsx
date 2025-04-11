@@ -23,6 +23,7 @@ import Image from "next/image";
 import { createQuestion } from "@/lib/actions/question.action";
 import { useToast } from "@/hooks/use-toast";
 import {  useRouter } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvide";
 
 
 interface IProps{
@@ -31,7 +32,7 @@ interface IProps{
 }
 
 const QuestionForm = ({type,clerkId}:IProps) => {
-  
+      const {mode} = useTheme();
   const editorRef = useRef<Editor | null>(null);
   const [tagInput, setTagInput] = useState('');
   const [isPending,startTransition] = useTransition();
@@ -163,7 +164,9 @@ const QuestionForm = ({type,clerkId}:IProps) => {
                       'bold italic forecolor | alignleft aligncenter ' +
                       'alignright alignjustify | bullist numlist outdent indent | ' +
                       'removeformat | help',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                    skin:mode === 'dark' ? 'oxide-dark':'oxide',
+                    content_css:mode === 'dark' ? 'dark' : 'light'
                   }}
                   onEditorChange={(content) => {
                     form.setValue('explanation', content); // Set the editor content to form
