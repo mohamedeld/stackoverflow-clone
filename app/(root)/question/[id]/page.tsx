@@ -41,7 +41,16 @@ const QuestionDetailPage = async ({params}:IProps) => {
                 </div>
                 <div className="flex justify-end text-white">
                     {/* voting */}
-                    <Votes/>
+                   <Votes
+                        type="question"
+                        itemId={res?.question?._id}
+                        userId={ session?.user?._id || ''}
+                        upvotes={res?.question?.upvotes?.length}
+                        hasUpvoted={res?.question?.upvotes?.includes(session?.user?._id)}
+                        downvotes={res?.question?.downvotes?.length}
+                        hasDownvoted={res?.question?.downvotes?.includes(session?.user?._id)}
+                        hasSaved={session?.user?.saved?.includes(res?.question?._id)}
+                    />
                 </div>
             </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
