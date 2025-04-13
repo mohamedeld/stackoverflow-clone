@@ -49,8 +49,8 @@ const HomePage = async ({searchParams}:IProps) => {
             <QuestionCard key={question?._id} _id={question?._id} 
               title={question?.title}
               createdAt={question?.createdAt}
-              upvotes={question?.upvotes}
-              views={question?.views}
+              upvotes={question?.upvotes?.length || 0}
+              views={question?.views || 0}
               author={question?.author}
               tags={question?.tags}
               answers={question?.answers}

@@ -102,7 +102,8 @@ export async function upvoteQuestion(params:QuestionVoteParams){
     revalidatePath(path); 
     return {
       success:true,
-      question
+      question,
+      message:"Upvoted successfully"
     }
   }catch(error){
     return {

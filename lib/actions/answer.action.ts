@@ -1,6 +1,6 @@
 'use server';
 
-import { CreateAnswerParams, GetAnswersParams } from "@/types";
+import { AnswerVoteParams, CreateAnswerParams, GetAnswersParams } from "@/types";
 import { connnectToDB } from "../database";
 import Answer from "@/models/answer.model";
 import { revalidatePath } from "next/cache";
@@ -52,3 +52,40 @@ export async function getAnswers(params:GetAnswersParams){
       }
     }
   }
+
+export async function upvoteAnswer(params:AnswerVoteParams){
+  try{
+    await connnectToDB();
+    const {answerId,userId,hasdownVoted,hasupVoted,path} = params;
+
+    let updateQuery = {};
+    if(hasupVoted){
+      updateQuery = { $pull : {upvotes:userId}}
+    }else if(hasdownVoted){
+      updateQuery = {$pull : {downvotes:userId},
+      $push: {upvotes:userId}
+    }
+    }else{
+      updateQuery = {$addToSet: {upvotes:userId}}
+    }
+    const answer = await Answer.findByIdAndUpdate(answerId,updateQuery,{new:true})
+    if(!answer){
+      return {
+        success:false,
+        message:"Answer not found"
+      }
+    }
+    // increment author's reputation
+    revalidatePath(path); 
+    return {
+      success:true,
+      answer,
+      message:"Answer Upvoted successfully"
+    }
+  }catch(error){
+    return {
+      success:false,
+      message: error instanceof Error ? error?.message : "Something went wrong"
+    }
+  }
+}

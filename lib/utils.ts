@@ -35,15 +35,15 @@ export const getTimestamp = (createdAt:Date):string=>{
 }
 
 export const formatNumber = (num: number): string => {
-  if (num < 1000) return num.toString();
+  if (num < 1000) return num?.toString();
 
   const suffixes = ["", "K", "M", "B", "T"]; // Thousand, Million, Billion, Trillion
   let i = 0;
 
-  while (num >= 1000 && i < suffixes.length - 1) {
+  while (num >= 1000 && i < suffixes?.length - 1) {
     num /= 1000;
     i++;
   }
 
-  return `${num.toFixed(1).replace(/\.0$/, '')}${suffixes[i]}`;
+  return `${num?.toFixed(1)?.replace(/\.0$/, '')}${suffixes[i]}`;
 };

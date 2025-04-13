@@ -1,6 +1,7 @@
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
+import { upvoteAnswer } from "@/lib/actions/answer.action";
 import { upvoteQuestion } from "@/lib/actions/question.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
@@ -22,7 +23,7 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
   const {toast} = useToast();
   const pathname = usePathname();
   const handleVotes = async (vote:string)=>{
-    if(userId){
+    if(!userId){
       toast({
         variant:'destructive',
         description:'user not found'
@@ -31,14 +32,45 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     }
     if(vote === 'upvote'){
       if(type === 'question'){
-        await upvoteQuestion({
-          questionId:itemId,
-          userId,
+       const res =  await upvoteQuestion({
+          questionId:JSON.parse(itemId),
+          userId:JSON.prase(userId),
           hasupVoted:hasUpvoted,
           hasdownVoted:hasDownvoted,
           path:pathname
         })
+    if(!res?.success){
+        toast({
+            variant:'destructive',
+            description:res?.message
+        })
+        return;
+    }
+    toast({
+        title:'Success',
+        description:res?.message
+    })
+      } else if(type === 'answer'){
+        const res = await upvoteAnswer({
+            answerId:JSON.parse(itemId),
+            userId:JSON.parse(userId),
+            hasupVoted:hasUpvoted,
+            hasdownVoted:hasDownvoted,
+            path:pathname
+          })
+          if(!res?.success){
+            toast({
+                variant:'destructive',
+                description:res?.message
+            })
+            return;
+        }
+        toast({
+            title:'Success',
+            description:res?.message
+        })    
       }
+
     }
   }
   const handleSaved = ()=>{
