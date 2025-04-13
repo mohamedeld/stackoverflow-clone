@@ -1,8 +1,8 @@
 'use client';
 
 import { useToast } from "@/hooks/use-toast";
-import { upvoteAnswer } from "@/lib/actions/answer.action";
-import { upvoteQuestion } from "@/lib/actions/question.action";
+import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
+import { downvoteQuestion, upvoteQuestion } from "@/lib/actions/question.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -34,7 +34,7 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
       if(type === 'question'){
        const res =  await upvoteQuestion({
           questionId:JSON.parse(itemId),
-          userId:JSON.prase(userId),
+          userId:JSON.parse(userId),
           hasupVoted:hasUpvoted,
           hasdownVoted:hasDownvoted,
           path:pathname
@@ -52,6 +52,48 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     })
       } else if(type === 'answer'){
         const res = await upvoteAnswer({
+            answerId:JSON.parse(itemId),
+            userId:JSON.parse(userId),
+            hasupVoted:hasUpvoted,
+            hasdownVoted:hasDownvoted,
+            path:pathname
+          })
+          if(!res?.success){
+            toast({
+                variant:'destructive',
+                description:res?.message
+            })
+            return;
+        }
+        toast({
+            title:'Success',
+            description:res?.message
+        })    
+      }
+
+    }
+    if(vote === 'downvote'){
+      if(type === 'question'){
+       const res =  await downvoteQuestion({
+          questionId:JSON.parse(itemId),
+          userId:JSON.parse(userId),
+          hasupVoted:hasUpvoted,
+          hasdownVoted:hasDownvoted,
+          path:pathname
+        })
+    if(!res?.success){
+        toast({
+            variant:'destructive',
+            description:res?.message
+        })
+        return;
+    }
+    toast({
+        title:'Success',
+        description:res?.message
+    })
+      } else if(type === 'answer'){
+        const res = await downvoteAnswer({
             answerId:JSON.parse(itemId),
             userId:JSON.parse(userId),
             hasupVoted:hasUpvoted,

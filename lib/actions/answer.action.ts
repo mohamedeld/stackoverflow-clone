@@ -89,3 +89,40 @@ export async function upvoteAnswer(params:AnswerVoteParams){
     }
   }
 }
+
+export async function downvoteAnswer(params:AnswerVoteParams){
+  try{
+    await connnectToDB();
+    const {answerId,userId,hasdownVoted,hasupVoted,path} = params;
+
+    let updateQuery = {};
+    if(hasdownVoted){
+      updateQuery = { $pull : {downvotes:userId}}
+    }else if(hasupVoted){
+      updateQuery = {$pull : {upvotes:userId},
+      $push: {downvotes:userId}
+    }
+    }else{
+      updateQuery = {$addToSet: {downvotes:userId}}
+    }
+    const answer = await Answer.findByIdAndUpdate(answerId,updateQuery,{new:true})
+    if(!answer){
+      return {
+        success:false,
+        message:"Answer not found"
+      }
+    }
+    // increment author's reputation
+    revalidatePath(path); 
+    return {
+      success:true,
+      answer,
+      message:"Answer Downvoted successfully"
+    }
+  }catch(error){
+    return {
+      success:false,
+      message: error instanceof Error ? error?.message : "Something went wrong"
+    }
+  }
+}
