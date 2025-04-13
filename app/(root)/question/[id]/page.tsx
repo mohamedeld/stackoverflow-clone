@@ -43,13 +43,13 @@ const QuestionDetailPage = async ({params}:IProps) => {
                     {/* voting */}
                    <Votes
                         type="question"
-                        itemId={JSON.stringify(res?.question?._id)}
-                        userId={ JSON.stringify(session?.user?._id) || ''}
+                        itemId={res?.question?._id?.toString()}
+                        userId={session?.user?._id?.toString() || ''}
                         upvotes={res?.question?.upvotes?.length || 0}
-                        hasUpvoted={res?.question?.upvotes?.includes(session?.user?._id) || false}
+                        hasUpvoted={res?.question?.upvotes?.some((id:string)=> id?.toString() === session?.user?._id?.toString()) || false}
                         downvotes={res?.question?.downvotes?.length || 0}
-                        hasDownvoted={res?.question?.downvotes?.includes(session?.user?._id) || false}
-                        hasSaved={session?.user?.saved?.includes(res?.question?._id) || false}
+                        hasDownvoted={res?.question?.downvotes?.some((id:string)=> id?.toString() === session?.user?._id?.toString()) || false}
+                        hasSaved={session?.user?.saved?.some(id=> id?.toString() === res?.question?._id?.toString()) || false}
                     />
                 </div>
             </div>

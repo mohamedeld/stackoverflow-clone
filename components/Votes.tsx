@@ -3,6 +3,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { downvoteQuestion, upvoteQuestion } from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -33,8 +34,8 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     if(vote === 'upvote'){
       if(type === 'question'){
        const res =  await upvoteQuestion({
-          questionId:JSON.parse(itemId),
-          userId:JSON.parse(userId),
+          questionId:itemId,
+          userId,
           hasupVoted:hasUpvoted,
           hasdownVoted:hasDownvoted,
           path:pathname
@@ -52,8 +53,8 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     })
       } else if(type === 'answer'){
         const res = await upvoteAnswer({
-            answerId:JSON.parse(itemId),
-            userId:JSON.parse(userId),
+            answerId:itemId,
+            userId,
             hasupVoted:hasUpvoted,
             hasdownVoted:hasDownvoted,
             path:pathname
@@ -75,8 +76,8 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     if(vote === 'downvote'){
       if(type === 'question'){
        const res =  await downvoteQuestion({
-          questionId:JSON.parse(itemId),
-          userId:JSON.parse(userId),
+          questionId:itemId,
+          userId,
           hasupVoted:hasUpvoted,
           hasdownVoted:hasDownvoted,
           path:pathname
@@ -94,8 +95,8 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
     })
       } else if(type === 'answer'){
         const res = await downvoteAnswer({
-            answerId:JSON.parse(itemId),
-            userId:JSON.parse(userId),
+            answerId:itemId,
+            userId,
             hasupVoted:hasUpvoted,
             hasdownVoted:hasDownvoted,
             path:pathname
@@ -115,8 +116,31 @@ const Votes = ({type,itemId,userId,upvotes,hasDownvoted,hasSaved,hasUpvoted,down
 
     }
   }
-  const handleSaved = ()=>{
-
+  const handleSaved = async ()=>{
+    try{
+        const res = await toggleSaveQuestion({
+            questionId:itemId,
+            userId,
+            path:pathname
+        });
+        if(!res?.success){
+            toast({
+                variant:'destructive',
+                description:res?.message
+            })
+            return;
+        }
+        toast({
+            title:'Success',
+            description:res?.message
+        }) 
+    }catch(error){
+        toast({
+            variant:'destructive',
+            description:error instanceof Error ? error?.message : 'Something went wrong'
+        })
+        return;
+    }
   }
   return (
     <div className="flex gap-5">

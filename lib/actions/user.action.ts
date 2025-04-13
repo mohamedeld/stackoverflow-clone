@@ -2,7 +2,7 @@
 
 import User from "@/models/user.model";
 import { connnectToDB } from "../database";
-import { CreateUserParams, DeleteUserParams, GetAllUsersParams, UpdateUserParams } from "@/types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, ToggleSaveQuestionParams, UpdateUserParams } from "@/types";
 import { revalidatePath } from "next/cache";
 import Question from "@/models/question.model";
 
@@ -129,3 +129,33 @@ export const getAllUsers = async (params?:GetAllUsersParams)=>{
     }
   }
 }
+
+export async function toggleSaveQuestion(params:ToggleSaveQuestionParams){
+    try{
+      await connnectToDB();
+      const {userId,questionId,path} = params;
+      const user = await User.findById(userId);
+      if(!user){
+        return {
+            success:false,
+            message:"user not found"
+        }
+      }
+      const isQuestionSaved = user?.saved?.some((id:string)=> id?.toString() === questionId?.toString());
+      if(isQuestionSaved){
+          await User.findByIdAndUpdate(userId,{
+            $pull:{saved:questionId}
+        },{new:true})
+      }else{
+        await User.findByIdAndUpdate(userId,{
+            $addToSet:{saved:questionId?.toString()}
+        },{new:true})
+    }
+      revalidatePath(path);
+    }catch(error){
+        return {
+          success:false,
+          message: error instanceof Error ? error?.message : "Something went wrong"
+        }
+      }
+    }

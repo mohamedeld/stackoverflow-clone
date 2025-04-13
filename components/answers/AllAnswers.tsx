@@ -55,12 +55,12 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: IP
                                         {/* voting */}
                                         <Votes
                                             type="answer"
-                                            itemId={JSON.stringify(answer?._id)}
-                                            userId={JSON.stringify(userId) || ''}
+                                            itemId={answer?._id?.toString()}
+                                            userId={userId?.toString() || ''}
                                             upvotes={answer?.upvotes?.length || 0}
-                                            hasUpvoted={answer?.upvotes?.includes(userId) || false}
+                                            hasUpvoted={answer?.upvotes?.some((id:string)=> id?.toString() === userId?.toString()) || false}
                                             downvotes={answer?.downvotes?.length || 0}
-                                            hasDownvoted={answer?.downvotes?.includes(userId) || false}
+                                            hasDownvoted={answer?.downvotes?.some((id:string)=> id?.toString() === userId?.toString()) || false}
                                             
                                         />
                                     </div>
