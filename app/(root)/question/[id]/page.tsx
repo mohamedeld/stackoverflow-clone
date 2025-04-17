@@ -43,8 +43,8 @@ const QuestionDetailPage = async ({params}:IProps) => {
                     {/* voting */}
                    <Votes
                         type="question"
-                        itemId={res?.question?._id?.toString()}
-                        userId={session?.user?._id?.toString() || ''}
+                        itemId={`${res?.question?._id?.toString()}`}
+                        userId={`${session?.user?._id?.toString()}` || ''}
                         upvotes={res?.question?.upvotes?.length || 0}
                         hasUpvoted={res?.question?.upvotes?.some((id:string)=> id?.toString() === session?.user?._id?.toString()) || false}
                         downvotes={res?.question?.downvotes?.length || 0}
@@ -91,8 +91,8 @@ const QuestionDetailPage = async ({params}:IProps) => {
                 />
             ))}
         </div>
-        <AllAnswers questionId={res?.question?._id} userId={session?.user?._id || ''} totalAnswers={res?.question?.answers?.length}/>
-        <AnswerForm questionId={res?.question?._id} />
+        <AllAnswers questionId={res?.question?._id?.toString()} userId={session?.user?._id?.toString() || ''} totalAnswers={res?.question?.answers?.length}/>
+        <AnswerForm questionId={res?.question?._id?.toString()} />
     </>
   )
 }

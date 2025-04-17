@@ -55,8 +55,8 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: IP
                                         {/* voting */}
                                         <Votes
                                             type="answer"
-                                            itemId={answer?._id?.toString()}
-                                            userId={userId?.toString() || ''}
+                                            itemId={`${answer?._id?.toString()}`}
+                                            userId={`${userId?.toString()}` || ''}
                                             upvotes={answer?.upvotes?.length || 0}
                                             hasUpvoted={answer?.upvotes?.some((id:string)=> id?.toString() === userId?.toString()) || false}
                                             downvotes={answer?.downvotes?.length || 0}

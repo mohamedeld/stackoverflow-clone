@@ -141,18 +141,28 @@ export async function toggleSaveQuestion(params:ToggleSaveQuestionParams){
             message:"user not found"
         }
       }
-      const isQuestionSaved = user?.saved?.some((id:string)=> id?.toString() === questionId?.toString());
+
+      const isQuestionSaved = user?.saved?.some((item)=> item?.toString() === questionId?.toString())
       if(isQuestionSaved){
           await User.findByIdAndUpdate(userId,{
             $pull:{saved:questionId}
         },{new:true})
+        return {
+          success:true,
+          message:'Deleted successfully'
+        }
       }else{
         await User.findByIdAndUpdate(userId,{
-            $addToSet:{saved:questionId?.toString()}
+            $addToSet:{saved:questionId}
         },{new:true})
+        return {
+          success:true,
+          message:'Added successfully'
+        }
     }
       revalidatePath(path);
     }catch(error){
+      console.log("error ",error )
         return {
           success:false,
           message: error instanceof Error ? error?.message : "Something went wrong"
